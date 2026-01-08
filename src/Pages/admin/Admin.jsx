@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Join = () => {
+function Admin() {
   const [useData, setData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: ''
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    img: "",
   });
 
   const navigate = useNavigate();
@@ -26,13 +25,13 @@ const Join = () => {
 
     // Password Match Validation
     if (useData.password !== useData.confirmPassword) {
-      Swal.fire({ icon: 'warning', title: 'Passwords do not match' });
+      alert("Passwords do not match!");
       return;
     }
 
     try {
       const res = await axios.post(
-        `https://itlearners-f748d-default-rtdb.firebaseio.com/user.json`,
+        `https://itlearners-f748d-default-rtdb.firebaseio.com/admin.json`,
         useData
       );
 
@@ -40,28 +39,28 @@ const Join = () => {
 
       // Reset form
       setData({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirmPassword: ''
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        img: "",
       });
 
-      // Success and navigate to login page
-      await Swal.fire({ icon: 'success', title: 'Account created', text: 'You can now log in.', timer: 1400, showConfirmButton: false });
-      navigate("/login");
-
+      
+       navigate("/productInfo");
     } catch (err) {
       console.error("Error submitting data:", err);
-      Swal.fire({ icon: 'error', title: 'Sign up failed', text: 'Something went wrong. Try again!' });
+      alert("Something went wrong. Try again!");
     }
   };
 
   return (
-    <div className="auth-container">
+    <>
+    
+      <div className="auth-container">
       <div className="auth-box">
         <div className="auth-header">
-          <h2>Sign Up</h2>
+          <h2>Admin-Sign Up</h2>
         </div>
 
         <form className="auth-form" onSubmit={submitHandler}>
@@ -90,18 +89,6 @@ const Join = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">Phone</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={useData.phone}
-              onChange={handler}
-              required
-            />
-          </div>
-
-          <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -119,8 +106,21 @@ const Join = () => {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
+             
               value={useData.confirmPassword}
               onChange={handler}
+              required
+            />
+          </div>
+
+           <div className="form-group">
+            <label htmlFor="img">Image</label>
+            <input
+              onChange={handler}
+              id="img"
+              name="img"
+              value={useData.img}
+              placeholder="Please provide image URL"
               required
             />
           </div>
@@ -128,13 +128,14 @@ const Join = () => {
           <button type="submit" className="submit-btn">
             Submit
           </button>
-          <h6 style={{ textAlign: 'center' }}>
-            <a href="/login">Already have an account?</a>
-          </h6>
+         
         </form>
       </div>
     </div>
-  );
-};
 
-export default Join;
+
+    </>
+  )
+}
+
+export default Admin;

@@ -13,12 +13,18 @@ function Index() {
 
   const fetchProducts = async () => {
     try {
-      const objdata = await axios.get("http://localhost:3000/products");
-      setProduct(objdata.data);
-      const categariosData=await axios.get("http://localhost:3000/category");
-      setCategarios(categariosData.data);
-        const instructorData=await axios.get(`http://localhost:5000/instructor`);
-      setInstructor(instructorData.data);
+      const objdata =await axios.get(`https://itlearners-f748d-default-rtdb.firebaseio.com/products.json`);
+    
+
+      setProduct(Object.values(objdata.data))
+
+
+      const categariosData=await axios.get("https://itlearners-f748d-default-rtdb.firebaseio.com/category.json");
+      setCategarios(Object.values(categariosData.data));
+
+      
+        const instructorData=await axios.get(`https://itlearners-f748d-default-rtdb.firebaseio.com/instructor.json`);
+      setInstructor(Object.values(instructorData.data));
 
      
     } catch (error) {

@@ -9,13 +9,14 @@ function Courses() {
 
   const fetchData=async()=>{
     try {
-      const res=await axios.get(`http://localhost:3000/category`);
+      const res=await axios.get(  `https://itlearners-f748d-default-rtdb.firebaseio.com/category.json`);
     
       console.log(res.data);
      
       
       
-      setData(res.data);
+      // setData(res.data);
+      setData(Object.values(res.data))
       
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -26,8 +27,12 @@ function Courses() {
   const productAdd=async()=>{
 
     try {
-        const pro=await axios.get(`http://localhost:3000/products`);
-        setProduct(pro.data)
+        const pro=await axios.get(`https://itlearners-f748d-default-rtdb.firebaseio.com/products.json`
+
+
+          
+        );
+        setProduct(Object.values(pro.data))
     } catch (error) {
       console.error("Error fetching products:", error);
     }

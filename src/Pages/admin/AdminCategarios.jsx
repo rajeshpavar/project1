@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-function AdminCategories() {
+function AdminCategarios() {
   const [data, setData] = useState({
     img: "",
     course: "",
@@ -17,9 +17,26 @@ function AdminCategories() {
     });
   };
 
-  const FetchData = async () => {
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
     try {
-      await axios.post("https://itlearners-f748d-default-rtdb.firebaseio.com/category.json", data);
+      // Step 1: Add category to Firebase
+      const res = await axios.post(
+        "https://itlearners-f748d-default-rtdb.firebaseio.com/category.json",
+        data
+      );
+
+      // Step 2: Get Firebase ID
+      const firebaseId = res.data.name;
+
+      // Step 3: Patch ID back into the newly added item
+      await axios.patch(
+        `https://itlearners-f748d-default-rtdb.firebaseio.com/category/${firebaseId}.json`,
+        { id: firebaseId }
+      );
+
+      // Step 4: Reset form
       setData({
         img: "",
         course: "",
@@ -27,14 +44,12 @@ function AdminCategories() {
         student: "",
         price: ""
       });
+
+      alert("✅ Category added successfully!");
     } catch (error) {
       console.error("Error posting data:", error);
+      alert("Failed to add category.");
     }
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    FetchData();
   };
 
   return (
@@ -105,7 +120,7 @@ function AdminCategories() {
           </div>
 
           <button type="submit" className="submit-btn">
-            Add Course
+            Add Category
           </button>
         </form>
       </div>
@@ -113,4 +128,4 @@ function AdminCategories() {
   );
 }
 
-export default AdminCategories;
+export default AdminCategarios;

@@ -1,17 +1,29 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 function Header() {
+  const navigate = useNavigate();
+  const isLoggedIn = typeof window !== "undefined" ? !!localStorage.getItem("uid") : false;
+  const userRole = typeof window !== "undefined" ? localStorage.getItem("urole") : null;
+
+  const handleLogout = () => {
+    localStorage.removeItem("uid");
+    localStorage.removeItem("uname");
+    localStorage.removeItem("uemail");
+    localStorage.removeItem("uphone");
+    localStorage.removeItem("urole");
+    navigate("/");
+  };
   return (
     <nav className="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-      <a
-        href="index.html"
+      <NavLink
+        to="/"
         className="navbar-brand d-flex align-items-center px-4 px-lg-5"
       >
         <h2 className="m-0 text-primary">
           <i className="fa fa-book me-3" />
           eLEARNING
         </h2>
-      </a>
+      </NavLink>
 
       <button
         type="button"
@@ -40,9 +52,25 @@ function Header() {
           Contact
           </NavLink>
         </div>
-        <NavLink to="/join"  className="nav-item nav-link active">
-          JOIN-NOW
+        {isLoggedIn ? (
+          <div className="d-flex align-items-center gap-2 px-3">
+            {userRole === "user" && (
+              <NavLink to="/my-account" className="nav-item nav-link active d-flex align-items-center">
+                <i className="fa fa-user me-2" /> My Account
+              </NavLink>
+            )}
+            {userRole === "admin" && (
+              <NavLink to="/admin-account" className="nav-item nav-link active d-flex align-items-center">
+                <i className="fa fa-user-shield me-2" /> Admin Account
+              </NavLink>
+            )}
+            <button onClick={handleLogout} className="btn btn-link nav-link">Logout</button>
+          </div>
+        ) : (
+          <NavLink to="/join"  className="nav-item nav-link active">
+            JOIN-NOW
           </NavLink>
+        )}
          
       </div>
     </nav>

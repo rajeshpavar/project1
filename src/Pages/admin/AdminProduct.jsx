@@ -219,25 +219,25 @@ setProduct(Object.values(objdata.data));
             >
               <div className="team-item bg-light">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src={data.img} alt='image' />
+                  <img className="img-fluid" src={data.image} alt='image' />
                 </div>
                 
                 
                 <div className="text-center p-4">
-                  <h5 className="mb-0">{data.name}</h5>
+                  <h5 className="mb-0">{data.instructorName}</h5>
                   <small>{data.designation}</small>
                    <div className="d-flex border-top">
                     <small className="flex-fill text-center border-end py-2">
                       {/* <i class="fa-solid fa-calendar-plus"/> */}
                       <i className="fa fa-solid fa-calendar-plus" />
                       <br />
-                    {data.yearsOfExpriance+"Years of Expriance"} 
+                    {data.experience+"Years of  Experience"} 
                     </small>
                    
                     <small className="flex-fill text-center py-2">
                       <i className="fa fa-user text-primary me-2" />
                       <br />
-                      {data.student + " +students"}
+                      {data.studentCount + " +students"}
                     </small>
                   </div>
                 </div>

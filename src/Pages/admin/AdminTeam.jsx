@@ -1,122 +1,133 @@
-import axios from 'axios'
-import React, { useState } from 'react'
+import axios from 'axios';
+import React, { useState } from 'react';
 
 function AdminTeam() {
-  const [data,setData]=useState({
-     name:"",
-      yearsOfExpriance:"",
-      designation:"",
-      student:"",
-      img:""
-  })
+  const [data, setData] = useState({
+    instructorName: "",
+    experience: "",
+    studentCount: "",
+    designation: "",
+    image: ""
+  });
 
-  const eventHandler=(E)=>{
-    setData(
-     {
-       ...data,
-      [E.target.name]:E.target.value
-     }
-    )
-    
-  }
-
-  const fetchData=async()=>{
-    const res=await axios.post(`https://itlearners-f748d-default-rtdb.firebaseio.com/instructor.json`,data);
+  const eventHandler = (e) => {
     setData({
       ...data,
-        name:"",
-      yearsOfExpriance:"",
-      designation:"",
-      student:"",
-      img:""
-    })
-  }
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const submitHandler=(e)=>{
+  const submitHandler = async (e) => {
     e.preventDefault();
-    fetchData()
-  }
+
+    try {
+      // 1️⃣ POST instructor data to Firebase
+      const res = await axios.post(
+        "https://itlearners-f748d-default-rtdb.firebaseio.com/instructor.json",
+        data
+      );
+
+      // 2️⃣ Get Firebase-generated ID
+      const firebaseId = res.data.name;
+
+      // 3️⃣ PATCH the ID into the new instructor entry
+      await axios.patch(
+        `https://itlearners-f748d-default-rtdb.firebaseio.com/instructor/${firebaseId}.json`,
+        { id: firebaseId }
+      );
+
+      // 4️⃣ Reset form
+      setData({
+        instructorName: "",
+        experience: "",
+        studentCount: "",
+        designation: "",
+        image: ""
+      });
+
+      alert("✅ Instructor added successfully!");
+    } catch (err) {
+      console.error("Error adding instructor:", err);
+      alert("Failed to add instructor.");
+    }
+  };
+
   return (
-    <>
-
-     <div className="auth-container">
-        <div className="auth-box">
-          <div className="auth-header">
-            <h2> Add Instructor </h2>
+    <div className="auth-container">
+      <div className="auth-box">
+        <div className="auth-header">
+          <h2>Add Instructor</h2>
+        </div>
+        <form className="auth-form" onSubmit={submitHandler}>
+          <div className="form-group">
+            <label htmlFor="instructorName">Name</label>
+            <input
+              onChange={eventHandler}
+              id="instructorName"
+              name="instructorName"
+              value={data.instructorName}
+              placeholder="Enter instructor name"
+              required
+            />
           </div>
-       <form className="auth-form" onSubmit={submitHandler} >
-           
 
-             <div className="form-group">
-              <label htmlFor="course">Intructor Name</label>
-              <input
-                onChange={eventHandler}
-                id="instructor"
-                name="name"
-                value={data.name}
-               placeholder='please enter instructor name'
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="designation">Designation</label>
+            <input
+              onChange={eventHandler}
+              id="designation"
+              name="designation"
+              value={data.designation}
+              placeholder="Enter instructor role"
+              required
+            />
+          </div>
 
-             <div className="form-group">
-              <label htmlFor="course">Years of Experiance </label>
-              <input
-               onChange={eventHandler}
-                id="yearsOfExpriance"
-                name="yearsOfExpriance"
-                value={data.yearsOfExpriance}
-               placeholder='please enter years Of Expriance '
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="experience">Experience (years)</label>
+            <input
+              type="number"
+              onChange={eventHandler}
+              id="experience"
+              name="experience"
+              value={data.experience}
+              placeholder="Years of experience"
+              required
+            />
+          </div>
 
-             <div className="form-group">
-              <label htmlFor="course">Current Number Of Student</label>
-              <input
-                onChange={eventHandler}
-                id="student"
-                name="student"
-                value={data.student}
-               placeholder='please enter total students '
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="studentCount">Number of Students</label>
+            <input
+              type="number"
+              onChange={eventHandler}
+              id="studentCount"
+              name="studentCount"
+              value={data.studentCount}
+              placeholder="Students taught"
+              required
+            />
+          </div>
 
-           <div className="form-group">
-              <label htmlFor="courese">Designation</label>
-              <input
-                 onChange={eventHandler}
-                id="designation"
-                name="designation"
-                value={data.designation}
-               placeholder='please enter designation of Instructor'
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="image">Image URL</label>
+            <input
+              onChange={eventHandler}
+              id="image"
+              name="image"
+              value={data.image}
+              placeholder="Paste profile image URL"
+              required
+            />
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="courese">Image Url</label>
-              <input
-                 onChange={eventHandler}
-                id="img"
-                name="img"
-                value={data.img}
-               placeholder='please enter image Url'
-                required
-              />
-            </div>
-
-           
-              <button type="submit" className="submit-btn">
-           Add Instructor
+          <button type="submit" className="submit-btn">
+            Add Instructor
           </button>
-          
-          </form>
-           </div>
+        </form>
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default AdminTeam
+export default AdminTeam;
